@@ -1,0 +1,20 @@
+# Ansible inventory for the cluster created by https://github.com/guillermo-carrasco/arvados-vm
+
+[workbench]
+10.10.10.2
+
+[compute]
+10.10.10.3
+
+[keep]
+10.10.10.4
+
+[keepstore]
+10.10.10.5
+10.10.10.6
+
+[shell]
+10.10.10.7
+
+[sso]
+10.10.10.8

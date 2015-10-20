@@ -1,0 +1,13 @@
+---
+########################################
+# Tasks file for the main Arvados role #
+########################################
+
+# Ansible RPM core module doesn't facilitate downloading key from keyservers, neither using the role/x/files
+# so unfortunately for RPM distributions like CentOS this needs to be done manually
+- name: Register the Curoverse signing key in RPM’s database
+  sudo: true
+  shell: >
+    gpg --keyserver pool.sks-keyservers.net --recv-keys 1078ECD7
+    gpg --armor --export 1078ECD7 >/tmp/curoverse.key
+    rpm --import /tmp/curoverse.key

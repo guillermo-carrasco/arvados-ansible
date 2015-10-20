@@ -1,0 +1,8 @@
+# Main playbook to deploy an Arvados cluster
+
+- hosts: all
+  sudo_user: "{{ user }}"
+  sudo: yes
+
+  roles:
+      - arvados
