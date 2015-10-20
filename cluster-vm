@@ -9,8 +9,10 @@
 [keep]
 10.10.10.4
 
-[keepstore]
+[keepstore1]
 10.10.10.5
+
+[keepstore2]
 10.10.10.6
 
 [shell]
