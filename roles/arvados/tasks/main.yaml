@@ -6,8 +6,14 @@
 # Ansible RPM core module doesn't facilitate downloading key from keyservers, neither using the role/x/files
 # so unfortunately for RPM distributions like CentOS this needs to be done manually
 - name: Register the Curoverse signing key in RPM’s database
-  sudo: true
   shell: >
-    gpg --keyserver pool.sks-keyservers.net --recv-keys 1078ECD7
-    gpg --armor --export 1078ECD7 >/tmp/curoverse.key
-    rpm --import /tmp/curoverse.key
+    gpg --keyserver pool.sks-keyservers.net --recv-keys 1078ECD7 &&
+    gpg --armor --export 1078ECD7 >/tmp/curoverse.key &&
+    sudo rpm --import /tmp/curoverse.key
+  # Necessary hack to not execute a second time
+  args:
+      creates: /etc/yum.repos.d/arvados.repo
+
+- name: Save configuration in /etc/yum.repos.d/arvados.repo
+  sudo: yes
+  copy: src=arvados.repo dest=/etc/yum.repos.d/arvados.repo owner=root group=root

@@ -1,0 +1,3 @@
+[arvados]
+name=Arvados
+baseurl=http://rpm.arvados.org/CentOS/$releasever/os/$basearch/
