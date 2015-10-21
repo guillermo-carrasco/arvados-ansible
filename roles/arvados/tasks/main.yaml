@@ -3,6 +3,8 @@
 # Tasks file for the main Arvados role #
 ########################################
 
+# CentOS specific commands
+
 # Ansible RPM core module doesn't facilitate downloading key from keyservers, neither using the role/x/files
 # so unfortunately for RPM distributions like CentOS this needs to be done manually
 - name: Register the Curoverse signing key in RPM’s database
@@ -13,7 +15,16 @@
   # Necessary hack to not execute a second time
   args:
       creates: /etc/yum.repos.d/arvados.repo
+  when: ansible_distribution == "CentOS"
 
 - name: Save configuration in /etc/yum.repos.d/arvados.repo
   sudo: yes
   copy: src=arvados.repo dest=/etc/yum.repos.d/arvados.repo owner=root group=root
+  when: ansible_distribution == "CentOS"
+
+# Ubuntu/Debian TO BE IMPLEMENTED (Pull Requests are welcome!)
+
+- name: Generate unique ID to use for the installation
+  shell: >
+    tr -dc 0-9a-z < /dev/urandom | head -c5; echo
+  register: uuid_prefix

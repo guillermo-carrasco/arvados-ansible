@@ -2,6 +2,11 @@
 
 - hosts: all
   sudo_user: "root"
-
   roles:
       - arvados
+
+- hosts: sso
+  sudo_user: "root"
+  roles:
+      - { role: rvm_io.rvm1-ruby, tags: ruby, sudo: True }
+      - arvados-sso
