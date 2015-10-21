@@ -20,6 +20,6 @@
     ruby -e 'puts rand(2**400).to_s(36)'
   register: secret_token_sso
 
-#- name: Add uuid and secret token to /etc/arvados/sso/application.yml
-#  sudo: yes
-#  template: src=application.j2 dest=/etc/arvados/sso/application.yml
+- name: Add uuid and secret token to /etc/arvados/sso/application.yml
+  sudo: yes
+  template: src=application.j2 dest=/etc/arvados/sso/application.yml

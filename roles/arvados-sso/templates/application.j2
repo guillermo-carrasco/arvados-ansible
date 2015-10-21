@@ -1,8 +1,19 @@
-test:
-  uuid_prefix: zzzzz
-  secret_token: <%= rand(2**512).to_s(36) %>
+# Copy this file to application.yml and edit to suit.
+#
+# Consult application.default.yml for the full list of configuration
+# settings.
+#
+# The order of precedence is:
+# 1. config/environments/{RAILS_ENV}.rb (deprecated)
+# 2. Section in application.yml corresponding to RAILS_ENV (e.g., development)
+# 3. Section in application.yml called "common"
+# 4. Section in application.default.yml corresponding to RAILS_ENV
+# 5. Section in application.default.yml called "common"
 
 common:
+  uuid_prefix: {{ uuid_prefix_sso.stdout_lines[0] }}
+  secret_token: {{ secret_token_sso.stdout_lines[0] }}
+
   # The site name that will be used in text such as "Sign in to site_title"
   site_title: Arvados
 
@@ -10,18 +21,6 @@ common:
   # the user as the default destination on the welcome page.
   default_link_title: Arvados
   default_link_url: "http://localhost:3000"
-
-  # secret_token is a string of alphanumeric characters used by Rails
-  # to sign session tokens. IMPORTANT: This is a site secret. It
-  # should be at least 50 characters.
-  secret_token: {{ secret_token_sso }}
-
-  # The uuid prefix for generating new Arvados user uuids.  Must be exactly
-  # five characters long in the range [a-z0-9].
-  uuid_prefix: {{ uuid_prefix_sso }}
-
-  # You really want to run everything over SSL.
-  force_ssl: true
 
   ###
   ### Local account configuration.  This is enabled if neither
@@ -51,9 +50,6 @@ common:
   # 2.0 to Google OAuth2 OpenId Connect (Google will provide OpenId 2.0 user
   # identifiers via the openid.realm parameter in the OAuth2 flow until 2017).
   google_openid_realm: false
-
-  # Enable login via Google OpenId 2.0 (note this is scheduled to be shut off 20 April 2015!)
-  google_deprecated_openid: false
 
 
   ###
