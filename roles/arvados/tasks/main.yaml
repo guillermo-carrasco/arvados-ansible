@@ -21,10 +21,3 @@
   sudo: yes
   copy: src=arvados.repo dest=/etc/yum.repos.d/arvados.repo owner=root group=root
   when: ansible_distribution == "CentOS"
-
-# Ubuntu/Debian TO BE IMPLEMENTED (Pull Requests are welcome!)
-
-- name: Generate unique ID to use for the installation
-  shell: >
-    tr -dc 0-9a-z < /dev/urandom | head -c5; echo
-  register: uuid_prefix

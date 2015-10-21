@@ -10,16 +10,6 @@
   sudo: yes
   yum: name=arvados-sso-server state=latest
 
-- name: Generate uuid prefix for the Single Sign On service
-  shell: >
-    ruby -e 'puts "#{rand(2**64).to_s(36)[0,5]}"'
-  register: uuid_prefix_sso
-
-- name: Generate secret token for the Single Sign On service
-  shell: >
-    ruby -e 'puts rand(2**400).to_s(36)'
-  register: secret_token_sso
-
 - name: Add uuid and secret token to /etc/arvados/sso/application.yml
   sudo: yes
   template: src=application.j2 dest=/etc/arvados/sso/application.yml
@@ -43,16 +33,10 @@
     sudo sed -i -e "s/::1\/128               ident/::1\/128               md5/" /var/lib/pgsql/data/pg_hba.conf
   when: ansible_distribution == "CentOS"
 
-
 - name: Restart Postgres initdb service
   sudo: yes
   service: name=postgresql state=restarted
   when: ansible_distribution == "CentOS"
-
-- name: Generate a password for the database
-  shell: >
-    ruby -e 'puts rand(2**128).to_s(36)'
-  register: db_password
 
 - name: Modify /etc/arvados/sso/database.yml to use generated password
   sudo: yes
@@ -69,7 +53,7 @@
   become_method: sudo
   postgresql_user:
     name: arvados_sso
-    password: "{{ db_password.stdout_lines[0] }}"
+    password: "{{ db_password }}"
     encrypted: True
     role_attr_flags: NOCREATEROLE,NOSUPERUSER,CREATEDB
 

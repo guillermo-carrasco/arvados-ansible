@@ -3,7 +3,7 @@ production:
   encoding: utf8
   database: arvados_sso_production
   username: arvados_sso
-  password: {{ db_password.stdout_lines[0] }}
+  password: {{ db_password }}
   host: localhost
   template: template0
 
