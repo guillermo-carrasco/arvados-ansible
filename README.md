@@ -18,9 +18,10 @@ of installing the corresponding packages in each node.
 
 # Requirements
 
+## Ansible galaxy installs
+
 Make sure to install the following roles _before_ running this playbook:
 
     ansible-galaxy install rvm_io.rvm1-ruby
-
 
 [arvados]: https://arvados.org/
