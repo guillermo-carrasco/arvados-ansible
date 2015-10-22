@@ -2,9 +2,11 @@
 # Tasks file for the Arvados SSO role #
 #######################################
 
-- name: Install ruby bundle
-  sudo: yes
-  gem: name=bundler state=latest
+- name: Install rails (this may take a couple of minutes, pease be patient)
+  become: yes
+  become_user: root
+  become_method: sudo
+  gem: name=rails state=latest
 
 - name: Install Arvados SSO server
   sudo: yes
@@ -47,7 +49,7 @@
   yum: name=python-psycopg2.x86_64
   when: ansible_distribution == "CentOS"
 
-- name: Create a new database user with permission to create its own databases.
+- name: Create a new postgresql user with permission to create its own databases.
   become: yes
   become_user: postgres
   become_method: sudo
@@ -56,6 +58,16 @@
     password: "{{ db_password }}"
     encrypted: True
     role_attr_flags: NOCREATEROLE,NOSUPERUSER,CREATEDB
+
+- name: Create database arvados_sso_production
+  become: yes
+  become_user: postgres
+  become_method: sudo
+  postgresql_db:
+    name: arvados_sso_production
+    encoding: UTF8
+    owner: arvados_sso
+    template: template0
 
 # Yum reinstall is not exposed in ansible
 - name: Reconfigure package
