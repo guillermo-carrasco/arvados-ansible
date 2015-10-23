@@ -8,5 +8,6 @@
 - hosts: sso
   sudo_user: "root"
   roles:
-      - { role: rvm_io.rvm1-ruby, tags: ruby, sudo: True }
+      - { role: rvm_io.rvm1-ruby, tags: ruby, rvm1_rubies: ruby-2.1.3, sudo: True }
+      - nginx
       - arvados-sso

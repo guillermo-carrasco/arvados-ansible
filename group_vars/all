@@ -7,7 +7,3 @@ uuid_prefix: abcde
 uuid_prefix_sso: fghij
 secret_token_sso: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
 db_password: abcdefghijklmnopqrstuvwxyz012345689
-
-app_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-app_id: arvados-server
-app_name: joshid

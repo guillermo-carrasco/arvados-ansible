@@ -1,0 +1,4 @@
+RUBY_PATH: /usr/local/rvm/rubies/ruby-2.1.3/bin
+app_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+app_id: arvados-server
+app_name: joshid
