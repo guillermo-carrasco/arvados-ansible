@@ -1,0 +1,30 @@
+# Fetch, compile and install ruby 2.1.3
+
+- name: Install requirements
+  sudo: yes
+  command: yum groupinstall "Development Tools" -y
+
+- name: Install Development Tools
+  sudo: yes
+  yum: name=openssl-devel state=latest
+
+- name: Get Ruby 2.1.3
+  get_url: url="{{ RUBY_URL }}" dest=/tmp
+
+- name: Compile and install Ruby 2.1.3 (This may take a while...)
+  sudo: yes
+  shell: >
+    cd /tmp &&
+    tar xvfvz ruby-2.1.3.tar.gz &&
+    cd ruby-2.1.3 &&
+    ./configure --prefix=/usr &&
+    make &&
+    make install
+
+- name: Update existing Gems
+  sudo: yes
+  command: gem update --system
+
+- name: Install bundler
+  sudo: yes
+  command: gem install bundler
