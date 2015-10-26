@@ -9,5 +9,5 @@
   sudo_user: "root"
   roles:
       - { role: rvm_io.rvm1-ruby, tags: ruby, sudo: True }
-      - nginx
+      - passenger
       - arvados-sso

@@ -24,4 +24,11 @@ Make sure to install the following roles _before_ running this playbook:
 
     ansible-galaxy install rvm_io.rvm1-ruby
 
+# Important notes
+
+## Passenger role
+Passenger role [needs SELinux disabled][SELinux] as a requirement, if you don't want this, you'll need
+to follow the instructions in the previous link and upgrade your kernel version to a version >= 2.6.39.
+
 [arvados]: https://arvados.org/
+[SELinux]: https://www.phusionpassenger.com/library/walkthroughs/deploy/ruby/ownserver/nginx/oss/el6/install_passenger.html

@@ -1,9 +1,0 @@
-# Configure Nginx repo and install Nginx in CentOS
-- name: Save configuration in /etc/yum.repos.d/nginx.repo
-  sudo: yes
-  copy: src=nginx.repo dest=/etc/yum.repos.d/nginx.repo owner=root group=root
-  when: ansible_distribution == "CentOS"
-
-- name: Install Nginx server
-  sudo: yes
-  yum: name=nginx state=latest

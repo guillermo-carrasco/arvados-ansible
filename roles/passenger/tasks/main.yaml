@@ -1,0 +1,25 @@
+# Configure Passenger Nginx and install Nginx in CentOS
+
+- name: Enable EPEL repositories
+  sudo: yes
+  yum: name=epel-release state=latest
+
+# https://community.hpcloud.com/article/centos-63-instance-giving-cannot-retrieve-metalink-repository-epel-error
+- name: Update EPEL repo to use HTTP rather than HTTPS
+  sudo: yes
+  command: sudo sed -i "s/mirrorlist=https/mirrorlist=http/" /etc/yum.repos.d/epel.repo
+
+- name: Save configuration in /etc/yum.repos.d/passenger.repo
+  sudo: yes
+  copy: src=passenger.repo dest=/etc/yum.repos.d/passenger.repo owner=root group=root
+  when: ansible_distribution == "CentOS"
+
+- name: Install Nginx and Passenger (and requirements)
+  sudo: yes
+  yum: name={{ item.name }} state=latest
+  with_items:
+    - {name: 'pygpgme'}
+    - {name: 'curl'}
+    - {name: 'nginx'}
+    - {name: 'passenger'}
+  when: ansible_distribution == "CentOS"
