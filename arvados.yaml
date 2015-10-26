@@ -8,6 +8,6 @@
 - hosts: sso
   sudo_user: "root"
   roles:
-      - ruby
+      - { role: rvm_io.rvm1-ruby, tags: ruby, sudo: True }
       - passenger
       - arvados-sso

@@ -22,5 +22,10 @@ of installing the corresponding packages in each node.
 Passenger role [needs SELinux disabled][SELinux] as a requirement, if you don't want this, you'll need
 to follow the instructions in the previous link and upgrade your kernel version to a version >= 2.6.39.
 
+## SSO Server SSL certificate
+Since this ansible recipe was intended to provision a testing cluster, SSL security has been disabled
+by choice for convinience. Please read carefully the section [configure your web server](http://doc.arvados.org/install/install-sso.html)
+in Arvados' documentation to properly configure a secure server. 
+
 [arvados]: https://arvados.org/
 [SELinux]: https://www.phusionpassenger.com/library/walkthroughs/deploy/ruby/ownserver/nginx/oss/el6/install_passenger.html
