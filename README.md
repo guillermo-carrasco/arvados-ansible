@@ -16,6 +16,29 @@ and follow the example. You just need to add the IPs/hostnames of the nodes you 
 the Keep filesystem, etc. under the corresponding section in the inventory. Ansible will then take care
 of installing the corresponding packages in each node.
 
+# Testing Arvados
+Using [Vagrant](https://www.vagrantup.com/), you can easily create an Arvados cluster to play around with it.
+In this repository you'll find the necessary Vagrantfile that will create and provision the cluster
+using this same recipe. After making sure Vagrant is installed, just type `vagrant up` and wait for
+the cluster to be created and provisioned.
+
+The cluster is composed by the following nodes, following [Arvados installation guide][installation]
+
+| Function | Number of nodes | VM name | Resources (mem in MB)
+| -------- | :-------------: | :-----: | :-------------------:
+|Arvados API, Crunch dispatcher, Git, Websockets and Workbench | 1 | workbench | 1024
+|Arvados Compute node | 1 | compute | 1024
+|Arvados Keepproxy server | 1 | keep | 512
+|Arvados Keepstore servers | 2 | keepstore[1,2] | 512
+|Arvados Shell server | 1 | shell | 512
+|Arvados SSO server | 1 | sso | 512
+
+**Note**: As you can see, you're going to need 4096MB (4GB) of available memory on your system to run this
+cluster.
+
+The cluster nodes will run CentOS 6, since is the operating system I needed to tests for, but Pull Requests
+for other OS are more than welcome!
+
 # Important notes
 
 ## Passenger role
@@ -25,7 +48,8 @@ to follow the instructions in the previous link and upgrade your kernel version 
 ## SSO Server SSL certificate
 Since this ansible recipe was intended to provision a testing cluster, SSL security has been disabled
 by choice for convinience. Please read carefully the section [configure your web server](http://doc.arvados.org/install/install-sso.html)
-in Arvados' documentation to properly configure a secure server. 
+in Arvados' documentation to properly configure a secure server.
 
 [arvados]: https://arvados.org/
 [SELinux]: https://www.phusionpassenger.com/library/walkthroughs/deploy/ruby/ownserver/nginx/oss/el6/install_passenger.html
+[installation]: http://doc.arvados.org/install/install-manual-prerequisites.html
