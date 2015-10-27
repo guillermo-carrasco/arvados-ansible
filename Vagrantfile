@@ -59,7 +59,8 @@ Vagrant.configure("2") do |global_config|
     arvados_cluster.each_pair do |name, options|
         global_config.vm.define name do |config|
             #VM configurations
-            config.vm.box = "centos6_64"
+            config.vm.box = "centos/7"
+            config.vm.box_url = "centos/7"
             config.vm.hostname = options[:hostname]
             config.vm.network :private_network, ip: options[:ipaddress]
 
@@ -79,8 +80,8 @@ Vagrant.configure("2") do |global_config|
 
             # Ansible provision
             config.vm.provision "ansible" do |ansible|
-                ansible.playbook = "arvados-ansible/arvados.yaml"
-                ansible.inventory_path = "arvados-ansible/cluster-vm"
+                ansible.playbook = "arvados.yaml"
+                ansible.inventory_path = "cluster-vm"
             end
         end
     end
