@@ -1,0 +1,23 @@
+#######################################
+# Tasks file for the Arvados API role #
+#######################################
+
+- name: Install Arvados API server and dependencies
+  yum: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - bison
+    - make
+    - automake
+    - gcc
+    - gcc-c++
+    - libcurl-devel
+    - git
+    - postgresql-server
+    - postgresql-devel
+    - python-psycopg2
+    - arvados-api-server
+
+- name: "Add Postgresql database credentials"
+  include: postgresql.yml
+  notify:
+    - restart postgresql
