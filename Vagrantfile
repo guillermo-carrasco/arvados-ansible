@@ -59,8 +59,8 @@ Vagrant.configure("2") do |global_config|
     arvados_cluster.each_pair do |name, options|
         global_config.vm.define name do |config|
             #VM configurations
-            config.vm.box = "centos/7"
-            config.vm.box_url = "centos/7"
+            config.vm.box_url = "boxcutter/centos64"
+            config.vm.box = "boxcutter/centos64"
             config.vm.hostname = options[:hostname]
             config.vm.network :private_network, ip: options[:ipaddress]
 
