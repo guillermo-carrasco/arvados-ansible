@@ -88,8 +88,12 @@ http {
     proxy_http_version 1.1;
 
     server {
-      listen       443 default_server;
-      server_name  arvados-sso-server;
+      listen       {{ ansible_eth1['ipv4']['address'] }}:443 ssl;
+      server_name  testing.arvados;
+
+      ssl on;
+      ssl_certificate     {{ SSL_CERT_PATH }}/server.crt;
+      ssl_certificate_key {{ SSL_CERT_PATH }}/server.key;
 
       index  index.html;
 

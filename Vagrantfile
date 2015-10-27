@@ -64,11 +64,6 @@ Vagrant.configure("2") do |global_config|
             config.vm.hostname = options[:hostname]
             config.vm.network :private_network, ip: options[:ipaddress]
 
-            # node-specific port forwarding
-            if options[:hostname] == "sso" then
-                config.vm.network "forwarded_port", guest: 443, host: 4430
-            end
-
             #VM specifications
             config.vm.provider :virtualbox do |v|
                 v.customize ["modifyvm", :id, "--memory", options[:memory]]

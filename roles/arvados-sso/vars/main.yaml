@@ -1,3 +1,5 @@
 app_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 app_id: arvados-server
 app_name: joshid
+
+SSL_CERT_PATH: /etc/nginx/ssl
