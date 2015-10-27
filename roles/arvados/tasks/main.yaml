@@ -4,6 +4,9 @@
 ########################################
 
 # CentOS specific commands
+- name: Install libselinux-python so that Ansible can copy files instide the VM
+  sudo: yes
+  yum: name=libselinux-python state=latest
 
 # Ansible RPM core module doesn't facilitate downloading key from keyservers, neither using the role/x/files
 # so unfortunately for RPM distributions like CentOS this needs to be done manually
