@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: guillermo-carrasco
+  description: Arvados distributed computing software for bioinformatics, data science, and production analysis using massive data sets.
+  company: "Wolfson Wohl Cancer Research Centre"
+  license: "GPLv3"
+  min_ansible_version: 1.9
+  platforms:
+  - name: EL
+    versions:
+    - 6
+  categories:
+    - development
+    - system
+    - cluster
