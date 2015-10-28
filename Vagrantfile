@@ -41,7 +41,7 @@ arvados_cluster = {
         :ipaddress => "10.10.10.8",
         :memory => 512,
         :ansible_role => "shell"
-    },
+    }
 }
 
 # Set up _very_ basic networking
