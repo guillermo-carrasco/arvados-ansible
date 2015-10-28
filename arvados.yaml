@@ -22,6 +22,7 @@
   roles:
       - rvm_io.rvm1-ruby
       - arvados
+      - passenger
       - arvados-api
 #      - arvados-crunch
 #      - arvados-git

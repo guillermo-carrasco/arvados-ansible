@@ -21,3 +21,20 @@
   include: postgresql.yml
   notify:
     - restart postgresql
+
+- name: "Create arvados-api app and database config"
+  file: path="/etc/arvados/api" state=directory mode=0700
+
+- name: Copy API database config
+  sudo: yes
+  template: src=database.j2 dest=/etc/arvados/api/database.ym
+
+- name: Copy API application config
+  sudo: yes
+  template: src=application.j2 dest=/etc/arvados/api/application.yml
+
+- name: "Create arvados-api user and internal git repos"
+  file: path="{{ item }}" state=directory mode=0700
+  with_items:
+    - "/var/lib/arvados/internal.git"
+    - "/var/lib/arvados/git/repositories"
