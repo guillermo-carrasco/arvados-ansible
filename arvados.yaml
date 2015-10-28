@@ -1,7 +1,8 @@
 # Main playbook to deploy an Arvados cluster
-- hosts: all
+- hosts: localhost
   name: make sure ansible-galaxy requirements are installed
-  local_action: ansible-galaxy install -r requirements.yml --ignore-errors --force -p roles
+  tasks:
+    - shell: ansible-galaxy install -r requirements.yml --ignore-errors --force -p roles
 
 - hosts: all
   sudo_user: "root"
@@ -15,10 +16,13 @@
       - passenger
       - arvados-sso
 
-- hosts: api
+- hosts: workbench
   sudo_user: "root"
   sudo: yes
   roles:
       - rvm_io.rvm1-ruby
       - arvados
       - arvados-api
+#      - arvados-crunch
+#      - arvados-git
+#      - arvados-workbench

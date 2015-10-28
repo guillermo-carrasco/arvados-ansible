@@ -1,5 +1,7 @@
 # Ansible inventory for the cluster created by https://github.com/guillermo-carrasco/arvados-vm
 
+localhost ansible_connection=local
+
 [workbench]
 10.10.10.2
 

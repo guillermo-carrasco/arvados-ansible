@@ -42,12 +42,6 @@ arvados_cluster = {
         :memory => 512,
         :ansible_role => "shell"
     },
-    :api => {
-        :hostname => "api",
-        :ipaddress => "10.10.10.9",
-        :memory => 512,
-        :ansible_role => "api"
-    }
 }
 
 # Set up _very_ basic networking
@@ -59,7 +53,6 @@ echo "10.10.10.5    keepstore1" >> /etc/hosts
 echo "10.10.10.6    keepstore2" >> /etc/hosts
 echo "10.10.10.7    shell" >> /etc/hosts
 echo "10.10.10.8    sso" >> /etc/hosts
-echo "10.10.10.9    api" >> /etc/hosts
 SCRIPT
 
 Vagrant.configure("2") do |global_config|
