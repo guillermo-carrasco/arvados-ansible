@@ -12,7 +12,7 @@
 # so unfortunately for RPM distributions like CentOS this needs to be done manually
 - name: Register the Curoverse signing key in RPM’s database
   shell: >
-    gpg --keyserver pool.sks-keyservers.net --recv-keys 1078ECD7 &&
+    gpg --keyserver pgp.mit.edu --recv-keys 1078ECD7 &&
     gpg --armor --export 1078ECD7 >/tmp/curoverse.key &&
     sudo rpm --import /tmp/curoverse.key
   # Necessary hack to not execute a second time

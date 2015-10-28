@@ -1,0 +1,9 @@
+app_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+app_id: arvados-server
+app_name: joshid
+sso_app_id: arvados-sso
+sso_app_secret: wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+sso_provider_url: https://sso
+workbench_address: https://workbench.zzzzz.example.com
+websocket_address: wss://ws.zzzzz.example.com/websocket
+git_repositories_dir: /var/lib/arvados/git/repositories
