@@ -10,3 +10,7 @@ secret_token_sso: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
 api_token: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
 
 db_password: abcdefghijklmnopqrstuvwxyz012345689
+
+## Arvados-git
+gitolite_user_home: '/var/lib/arvados/git'
+gitolite_user_name: 'gitolite3'

@@ -1,0 +1,35 @@
+---
+# tasks file for arvados-git
+- name: Install runit external yum repo
+  shell: curl -s https://packagecloud.io/install/repositories/imeyer/runit/script.rpm.sh | sudo bash
+
+- name: Install Arvados GIT server and dependencies
+  yum: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - git
+#    - perl-Data-Dumper XXX: not found in yum, should be installed via cpanm?
+    - openssh-server
+    - gitolite3
+    - arvados-git-httpd
+    - runit
+
+- name: "Create arvados-api user and internal git repos"
+  file: path="{{ item }}" state=directory mode=0700
+  with_items:
+    - "/var/lib/arvados/internal.git"
+    - "/var/lib/arvados/git/repositories"
+
+- name: Add git user and generate SSH key
+  user: name=git shell=/bin/bash groups={{ gitolite_user_name }} home="{{ gitolite_user_home }}" generate_ssh_key=yes ssh_key_bits=2048
+
+- name: Create arvados git dir
+  file: name="{{ gitolite_user_home }}" state=directory owner="{{ gitolite_user_name }}" group="{{ gitolite_user_name }}"
+
+- name: Create arvados git (bin) dir
+  file: name="{{ gitolite_user_home }}/bin" state=directory owner="{{ gitolite_user_name }}" group="{{ gitolite_user_name }}"
+
+- name: Create gitolite runit service dir
+  file: name="{{ gitolite_runit }}" state=directory
+
+- name: Setting up runit config for gitolite
+  template: src="gitolite.runit.j2" dest="{{ gitolite_runit }}/run" mode=700

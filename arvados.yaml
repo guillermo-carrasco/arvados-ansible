@@ -19,7 +19,7 @@
       - arvados
       - passenger
       - arvados-api
+      - arvados-git
       - groover.gitolite
 #      - arvados-crunch
-#      - arvados-git
 #      - arvados-workbench
