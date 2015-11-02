@@ -5,5 +5,12 @@ password: vagrant
 # purposes and are by no means secure for a production cluster
 uuid_prefix: abcde
 uuid_prefix_sso: fghij
+secret_token: yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
 secret_token_sso: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+api_token: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
 db_password: abcdefghijklmnopqrstuvwxyz012345689
+
+## Arvados-git
+gitolite_user_home: '/var/lib/arvados/git'
+gitolite_user_name: 'gitolite3'

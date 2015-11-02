@@ -6,6 +6,14 @@ install to deploy an Arvados cluster.
 
 ## How to run
 
+### Quickstart
+
+Make sure you tweaked `group_vars/all` as indicated in next section, then run:
+
+```
+ansible-galaxy install -r requirements.yml --ignore-errors --force -p roles && vagrant up
+```
+
 ### Variables
 Edit the file `group_vars/all` and set username and password that ansible will use to deploy the roles.
 Have in mind that this user **needs** root privileges to edit system files.
