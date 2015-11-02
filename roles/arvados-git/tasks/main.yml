@@ -17,10 +17,10 @@
   file: path="{{ item }}" state=directory mode=0700
   with_items:
     - "/var/lib/arvados/internal.git"
-    - "/var/lib/arvados/git/repositories"
+    - "{{ gitolite_user_home }}/repositories"
 
 - name: Add git user and generate SSH key
-  user: name=git shell=/bin/bash groups={{ gitolite_user_name }} home="{{ gitolite_user_home }}" generate_ssh_key=yes ssh_key_bits=2048
+  user: name={{ gitolite_user_name }} shell=/bin/bash groups={{ gitolite_user_name }} home="{{ gitolite_user_home }}" generate_ssh_key=yes ssh_key_bits=2048
 
 - name: Create arvados git dir
   file: name="{{ gitolite_user_home }}" state=directory owner="{{ gitolite_user_name }}" group="{{ gitolite_user_name }}"

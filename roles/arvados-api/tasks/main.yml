@@ -18,9 +18,9 @@
     - arvados-api-server
 
 - name: "Add Postgresql database credentials"
-  include: postgresql.yml
-  notify:
-    - restart postgresql
+ include: postgresql.yml
+ notify:
+   - restart postgresql
 
 - name: "Create arvados-api app and database config"
   file: path="/etc/arvados/api" state=directory mode=0700
