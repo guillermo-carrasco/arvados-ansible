@@ -12,22 +12,43 @@
     - gcc-c++
     - libcurl-devel
     - git
-    - postgresql-server
-    - postgresql-devel
     - python-psycopg2
     - arvados-api-server
-
-- name: "Add Postgresql database credentials"
- include: postgresql.yml
- notify:
-   - restart postgresql
 
 - name: "Create arvados-api app and database config"
   file: path="/etc/arvados/api" state=directory mode=0700
 
+- name: Create directory to store SSL certs
+  sudo: yes
+  file: path="{{ SSL_CERT_PATH }}" state=directory
+
+- name: create self-signed SSL cert
+  sudo: yes
+  command: openssl req -new -nodes -x509 -subj "/C=EU/ST=Sweden/L=Stockholm/O=IT/CN=${ansible_fqdn}" -days 3650 -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt -extensions v3_ca creates=/etc/nginx/ssl/server.crt
+
 - name: Copy API database config
   sudo: yes
-  template: src=database.j2 dest=/etc/arvados/api/database.ym
+  template: src=database.j2 dest=/etc/arvados/api/database.yml
+
+- name: Create a new postgresql user with permission to create its own databases.
+  become: yes
+  become_user: postgres
+  become_method: sudo
+  postgresql_user:
+    name: arvados
+    password: "{{ db_password }}"
+    encrypted: True
+    role_attr_flags: NOCREATEROLE,NOSUPERUSER,CREATEDB
+
+- name: Create database arvados_production
+  become: yes
+  become_user: postgres
+  become_method: sudo
+  postgresql_db:
+    name: arvados_production
+    encoding: UTF8
+    owner: arvados
+    template: template0
 
 - name: Copy API application config
   sudo: yes

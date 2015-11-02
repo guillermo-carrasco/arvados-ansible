@@ -89,7 +89,7 @@ http {
 
     server {
       listen       {{ ansible_eth1['ipv4']['address'] }}:443 ssl;
-      server_name  testing.arvados;
+      server_name  testing.arvados.sso;
 
       ssl on;
       ssl_certificate     {{ SSL_CERT_PATH }}/server.crt;

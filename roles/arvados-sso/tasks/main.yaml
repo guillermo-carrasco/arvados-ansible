@@ -10,38 +10,9 @@
   sudo: yes
   template: src=application.j2 dest=/etc/arvados/sso/application.yml
 
-- name: Initialize PostgreSQL database
-  sudo: yes
-  command: service postgresql initdb
-  when: ansible_distribution == "CentOS"
-  args:
-    creates: /var/lib/pgsql/data/postgresql.conf
-
-- name: Start PostgreSQL
-  sudo: yes
-  service: name=postgresql state=started
-
-# On CentOS6, you will need to modify PostgreSQL’s configuration to allow password authentication for local users
-- name: Allow password authentication for local users (PostgreSQL)
-  sudo: yes
-  shell: >
-    sudo sed -i -e "s/127.0.0.1\/32          ident/127.0.0.1\/32          md5/" /var/lib/pgsql/data/pg_hba.conf &&
-    sudo sed -i -e "s/::1\/128               ident/::1\/128               md5/" /var/lib/pgsql/data/pg_hba.conf
-  when: ansible_distribution == "CentOS"
-
-- name: Restart Postgres initdb service
-  sudo: yes
-  service: name=postgresql state=restarted
-  when: ansible_distribution == "CentOS"
-
 - name: Modify /etc/arvados/sso/database.yml to use generated password
   sudo: yes
   template: src=database.j2 dest=/etc/arvados/sso/database.yml
-
-- name: Install prerequisistes to create a new user in the database
-  sudo: yes
-  yum: name=python-psycopg2.x86_64
-  when: ansible_distribution == "CentOS"
 
 - name: Create a new postgresql user with permission to create its own databases.
   become: yes

@@ -8,18 +8,18 @@
   sudo_user: "root"
   roles:
       - { role: rvm_io.rvm1-ruby, tags: ruby, sudo: True }
+      - postgres
       - passenger
       - arvados-sso
 
 - hosts: workbench
   sudo_user: "root"
   sudo: yes
+  vars_files:
+      - roles/arvados-sso/vars/main.yaml
   roles:
       - rvm_io.rvm1-ruby
-      - arvados
+      - postgres
       - passenger
       - arvados-api
       - arvados-git
-      - groover.gitolite
-#      - arvados-workbench
-#      - arvados-crunch

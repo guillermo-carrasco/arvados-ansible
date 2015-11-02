@@ -70,39 +70,88 @@ http {
         }
     }
     server {
-      listen 127.0.0.1:8900;
-      server_name localhost-sso;
+      listen 127.0.0.1:8000;
+      server_name localhost-api;
 
-      root   /var/www/arvados-sso/current/public;
-      index  index.html;
+      root /var/www/arvados-api/current/public;
+      index  index.html index.htm index.php;
 
       passenger_enabled on;
-      # If you're not using RVM, comment out the line below.
-      passenger_ruby /usr/local/rvm/wrappers/ruby-2.1.3/ruby;
+      # If you're using RVM, uncomment the line below.
+      #passenger_ruby /usr/local/rvm/wrappers/default/ruby;
     }
 
-    upstream sso {
-      server     127.0.0.1:8900  fail_timeout=10s;
+    upstream api {
+      server     127.0.0.1:8000  fail_timeout=10s;
+    }
+
+    upstream websockets {
+      # The address below must match the one specified in puma's -b option.
+      server     127.0.0.1:8100  fail_timeout=10s;
     }
 
     proxy_http_version 1.1;
 
-    server {
-      listen       443 default_server;
-      server_name  arvados-sso-server;
+    # When Keep clients request a list of Keep services from the API server, the
+    # server will automatically return the list of available proxies if
+    # the request headers include X-External-Client: 1.  Following the example
+    # here, at the end of this section, add a line for each netmask that has
+    # direct access to Keep storage daemons to set this header value to 0.
+    geo $external_client {
+      default        1;
+      10.20.30.0/24  0;
+    }
 
-      index  index.html;
+    server {
+      listen       {{ ansible_eth1['ipv4']['address'] }}:443 ssl;
+      server_name  testing.arvados.api;
+
+      ssl on;
+      ssl_certificate     {{ SSL_CERT_PATH }}/cert.pem;
+      ssl_certificate_key {{ SSL_CERT_PATH }}/cert.key;
+
+      index  index.html index.htm index.php;
+
+      # This value effectively limits the size of API objects users can create,
+      # especially collections.  If you change this, you should also set
+      # `max_request_size` in the API server's application.yml file to the same
+      # value.
+      client_max_body_size 128m;
 
       location / {
-        proxy_pass            http://sso;
+        proxy_pass            http://api;
         proxy_redirect        off;
         proxy_connect_timeout 90s;
         proxy_read_timeout    300s;
 
         proxy_set_header      X-Forwarded-Proto https;
         proxy_set_header      Host $http_host;
+        proxy_set_header      X-External-Client $external_client;
         proxy_set_header      X-Real-IP $remote_addr;
         proxy_set_header      X-Forwarded-For $proxy_add_x_forwarded_for;
       }
     }
-}
+
+    server {
+      listen        {{ ansible_eth1['ipv4']['address'] }}:443 ssl;
+      server_name  ws.testing.arvados.api;
+
+      ssl on;
+      ssl_certificate     {{ SSL_CERT_PATH }}/cert.pem;
+      ssl_certificate_key {{ SSL_CERT_PATH }}/cert.key;
+
+      index  index.html index.htm index.php;
+
+      location / {
+        proxy_pass            http://websockets;
+        proxy_redirect        off;
+        proxy_connect_timeout 90s;
+        proxy_read_timeout    300s;
+
+        proxy_set_header      Upgrade $http_upgrade;
+        proxy_set_header      Connection "upgrade";
+        proxy_set_header      Host $host;
+        proxy_set_header      X-Real-IP $remote_addr;
+        proxy_set_header      X-Forwarded-For $proxy_add_x_forwarded_for;
+      }
+    }}
