@@ -19,9 +19,9 @@ production:
   blob_signing_key: {{ blob_signing_key }}
   sso_app_secret: {{ app_secret }}
   sso_app_id: {{ app_id }}
-  sso_provider_url: https://sso
-  workbench_address: https://sso
-  websocket_address: https://sso
+  sso_provider_url: {{ sso_address }}
+  workbench_address: {{ workbench_address }}
+  websocket_address: {{ sso_address }}
   #git_repositories_dir: ~
   #git_internal_dir: ~
 
@@ -32,9 +32,9 @@ development:
   blob_signing_key: {{ blob_signing_key }}
   sso_app_secret: {{ app_secret }}
   sso_app_id: {{ app_id }}
-  sso_provider_url: https://sso
-  workbench_address: https://sso
-  websocket_address: https://sso
+  sso_provider_url: {{ sso_address }}
+  workbench_address: {{ workbench_address }}
+  websocket_address: {{ sso_address }}
   #git_repositories_dir: ~
   #git_internal_dir: ~
 

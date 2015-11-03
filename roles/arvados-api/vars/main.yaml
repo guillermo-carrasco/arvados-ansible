@@ -9,3 +9,4 @@ websocket_address: wss://ws.zzzzz.example.com/websocket
 git_repositories_dir: /var/lib/arvados/git/repositories
 
 SSL_CERT_PATH: /etc/nginx/ssl
+puma_runit: /etc/sv/arvados-puma
