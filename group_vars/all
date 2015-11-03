@@ -4,9 +4,8 @@ password: vagrant
 # Arvados IDs and Passwwords, modify them to match your desired installation. These ate only for testing
 # purposes and are by no means secure for a production cluster
 uuid_prefix: abcde
-uuid_prefix_sso: fghij
 secret_token: yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
-secret_token_sso: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+blob_signing_key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 api_token: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
 
 db_password: abcdefghijklmnopqrstuvwxyz012345689
