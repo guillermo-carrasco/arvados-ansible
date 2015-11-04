@@ -2,9 +2,11 @@
 
 - name: Install PostgreSQL and dependencies
   yum: name={{ item.name }} state=latest
+  sudo: yes
   with_items:
-      - {name: 'postgresql.x86_64'}
-      - {name: 'postgresql-devel.x86_64'}
+      - {name: 'postgresql'}
+      - {name: 'postgresql-devel'}
+      - {name: 'postgresql-server'}
   when: ansible_distribution == "CentOS"
 
 - name: Initialize PostgreSQL database
