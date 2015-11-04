@@ -17,3 +17,4 @@ gitolite_user_name: 'gitolite3'
 # Addresses
 sso_address: https://sso
 workbench_address: https://workbench
+websocket_address: wss://ws.testing.arvados.api/websocket

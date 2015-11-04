@@ -17,7 +17,7 @@
   vars_files:
       - roles/arvados-sso/vars/main.yaml
   roles:
-      - rvm_io.rvm1-ruby
+      - { role: rvm_io.rvm1-ruby, tags: ruby, sudo: True }
       - postgres
       - passenger
       - arvados-api

@@ -16,21 +16,9 @@
     - python-psycopg2
     - arvados-api-server
 
-- name: "Create arvados-api app and database config"
+- name: Make sure PostgreSQL is running
   sudo: yes
-  file: path="/etc/arvados/api" state=directory mode=0700
-
-- name: Create directory to store SSL certs
-  sudo: yes
-  file: path="{{ SSL_CERT_PATH }}" state=directory
-
-- name: create self-signed SSL cert
-  sudo: yes
-  command: openssl req -new -nodes -x509 -subj "/C=EU/ST=Sweden/L=Stockholm/O=IT/CN=${ansible_fqdn}" -days 3650 -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt -extensions v3_ca creates=/etc/nginx/ssl/server.crt
-
-- name: Copy API database config
-  sudo: yes
-  template: src=database.j2 dest=/etc/arvados/api/database.yml
+  service: name=postgresql state=started
 
 - name: Create a new postgresql user with permission to create its own databases.
   become: yes
@@ -52,14 +40,34 @@
     owner: arvados
     template: template0
 
+- name: "Create arvados-api app and database config"
+  sudo: yes
+  file: path="/etc/arvados/api" state=directory mode=0700
+
+- name: Create directory to store SSL certs
+  sudo: yes
+  file: path="{{ SSL_CERT_PATH }}" state=directory
+
+- name: create self-signed SSL cert
+  sudo: yes
+  command: openssl req -new -nodes -x509 -subj "/C=EU/ST=Sweden/L=Stockholm/O=IT/CN=${ansible_fqdn}" -days 3650 -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt -extensions v3_ca creates=/etc/nginx/ssl/server.crt
+
+- name: Copy API database config
+  sudo: yes
+  template: src=database.j2 dest=/etc/arvados/api/database.yml
+
 - name: Copy API application config
   sudo: yes
   template: src=application.j2 dest=/etc/arvados/api/application.yml
   notify: restart nginx
 
+- name: Create directory where user git repositories will be stored.
+  sudo: yes
+  file: path="{{ git_repositories_dir }}" state=directory
+
 - name: Create puma runit service dir
   sudo: yes
-  file: name="{{ puma_runit }}" state=directory
+  file: path="{{ puma_runit }}" state=directory
 
 - name: Setting up runit config for Puma
   sudo: yes
