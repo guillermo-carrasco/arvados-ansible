@@ -13,6 +13,7 @@ db_password: abcdefghijklmnopqrstuvwxyz012345689
 ## Arvados-git
 gitolite_user_home: '/var/lib/arvados/git'
 gitolite_user_name: 'gitolite3'
+git_hostname: git.abcde.test.arvados
 
 # Addresses
 sso_address: https://sso
