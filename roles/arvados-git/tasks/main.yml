@@ -4,6 +4,7 @@
   shell: curl -s https://packagecloud.io/install/repositories/imeyer/runit/script.rpm.sh | sudo bash
 
 - name: Install Arvados GIT server and dependencies
+  sudo: yes
   yum: name={{ item }} state=latest update_cache=yes
   with_items:
     - git

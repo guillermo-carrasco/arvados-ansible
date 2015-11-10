@@ -72,3 +72,7 @@
 - name: Setting up runit config for Puma
   sudo: yes
   copy: src=puma.sh dest="{{ puma_runit }}/run" mode=700 owner=root group=root
+
+- name: Run application configuration script
+  sudo: yes
+  shell: /bin/bash /usr/local/bin/arvados-api-server-upgrade.sh
