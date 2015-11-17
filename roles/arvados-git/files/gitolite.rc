@@ -1,0 +1,6 @@
+my $repo_aliases;
+my $aliases_src = "$ENV{HOME}/.gitolite/arvadosaliases.pl";
+if ($ENV{HOME} && (-e $aliases_src)) {
+    $repo_aliases = do $aliases_src;
+}
+$repo_aliases ||= {};

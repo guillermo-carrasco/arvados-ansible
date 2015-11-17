@@ -1,3 +1,0 @@
----
-# defaults file for arvados-git
-gitolite_runit: "/etc/sv/arvados-git-httpd"

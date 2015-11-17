@@ -1,6 +1,6 @@
 #!/bin/sh
 export ARVADOS_API_HOST={{ uuid_prefix }}.testing.arvados
-export GITOLITE_HTTP_HOME={{ gitolite_user_home }}
+export GITOLITE_HTTP_HOME={{ git_user_home }}
 export GL_BYPASS_ACCESS_CHECKS=1
-export PATH=$PATH:{{ gitolite_user_home }}/bin
-exec chpst -u git:git arvados-git-httpd -address=:9001 -git-command={{ gitolite_user_home }}/gitolite/src/gitolite-shell -repo-root={{ gitolite_user_home }}/repositories 2>&1
+export PATH=$PATH:{{ git_user_home }}/bin
+exec chpst -u git:git arvados-git-httpd -address=:9001 -git-command={{ git_user_home }}/gitolite/src/gitolite-shell -repo-root={{ git_user_home }}/repositories 2>&1

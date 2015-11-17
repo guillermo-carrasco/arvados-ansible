@@ -14,24 +14,23 @@
     - arvados-git-httpd
     - runit
 
-- name: "Create arvados-api user and internal git repos"
+- name: Create git group
   sudo: yes
-  file: path="{{ item }}" state=directory mode=0700
-  with_items:
-    - "/var/lib/arvados/internal.git"
-    - "{{ gitolite_user_home }}/repositories"
+  group: name="{{ git_user_name }}" state=present
 
-- name: Add git user and generate SSH key
+- name: Add git user and generate SSH keys
   sudo: yes
-  user: name={{ gitolite_user_name }} shell=/bin/bash groups={{ gitolite_user_name }} home="{{ gitolite_user_home }}" generate_ssh_key=yes ssh_key_bits=2048
+  user: name="{{ git_user_name }}" shell=/bin/bash group="{{ git_user_name }}" home="{{ git_user_home }}" generate_ssh_key=yes ssh_key_bits=2048
 
 - name: Create arvados git dir
   sudo: yes
-  file: name="{{ gitolite_user_home }}" state=directory owner="{{ gitolite_user_name }}" group="{{ gitolite_user_name }}"
+  file: name="{{ git_user_home }}" state=directory owner="{{ git_user_name }}" group="{{ git_user_name }}"
 
 - name: Create arvados git (bin) dir
-  sudo: yes
-  file: name="{{ gitolite_user_home }}/bin" state=directory owner="{{ gitolite_user_name }}" group="{{ gitolite_user_name }}"
+  become: yes
+  become_user: "{{ git_user_name }}"
+  become_method: sudo
+  file: name="{{ git_user_home }}/bin" state=directory owner="{{ git_user_name }}" group="{{ git_user_name }}"
 
 - name: Create gitolite runit service dir
   sudo: yes
