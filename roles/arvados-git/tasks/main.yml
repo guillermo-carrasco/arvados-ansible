@@ -20,17 +20,52 @@
 
 - name: Add git user and generate SSH keys
   sudo: yes
-  user: name="{{ git_user_name }}" shell=/bin/bash group="{{ git_user_name }}" home="{{ git_user_home }}" generate_ssh_key=yes ssh_key_bits=2048
+  user: name="{{ git_user_name }}" shell=/bin/bash group="{{ git_user_name }}" home="{{ git_user_home }}" generate_ssh_key=yes
+
+- name: Save public key into local variable for later use
+  become: yes
+  become_user: "{{ git_user_name }}"
+  become_method: sudo
+  command: cat {{ git_user_home }}/.ssh/id_rsa.pub
+  register: GIT_SSH_KEY
 
 - name: Create arvados git dir
   sudo: yes
   file: name="{{ git_user_home }}" state=directory owner="{{ git_user_name }}" group="{{ git_user_name }}"
+
+- name: Allow passwordless ssh connection to the git user
+  become: yes
+  become_user: "{{ git_user_name }}"
+  become_method: sudo
+  shell: >
+    cp .ssh/id_rsa.pub .ssh/authorized_keys &&
+    ssh -o stricthostkeychecking=no localhost cat .ssh/id_rsa.pub
+  args:
+    chdir: "{{ git_user_home }}"
+
+- name: Setup gitolite
+  become: yes
+  become_user: "{{ git_user_name }}"
+  become_method: sudo
+  command: gitolite setup -pk .ssh/id_rsa.pub
+  args:
+      chdir: "{{ git_user_home }}"
+
+- name: Copy gitolite configuration
+  become: yes
+  become_user: "{{ git_user_name }}"
+  become_method: sudo
+  copy: src=gitolite.rc dest="{{ git_user_home}}/.gitolite.rc"
 
 - name: Create arvados git (bin) dir
   become: yes
   become_user: "{{ git_user_name }}"
   become_method: sudo
   file: name="{{ git_user_home }}/bin" state=directory owner="{{ git_user_name }}" group="{{ git_user_name }}"
+
+- name: Configure git synchronization
+  sudo: yes
+  template: src=arvados-clients.j2 dest=/var/www/arvados-api/current/config/arvados-clients.yml
 
 - name: Create gitolite runit service dir
   sudo: yes

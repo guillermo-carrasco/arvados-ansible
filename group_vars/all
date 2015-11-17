@@ -6,7 +6,8 @@ password: vagrant
 uuid_prefix: abcde
 secret_token: yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
 blob_signing_key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-api_token: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+arvados_api_host: abcde.testing.arvados
+arvados_api_token: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
 
 db_password: abcdefghijklmnopqrstuvwxyz012345689
 
