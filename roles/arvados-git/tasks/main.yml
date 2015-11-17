@@ -67,6 +67,8 @@
   sudo: yes
   template: src=arvados-clients.j2 dest=/var/www/arvados-api/current/config/arvados-clients.yml
 
+# XXX: Enable the synchronization script section in the guide
+
 - name: Create gitolite runit service dir
   sudo: yes
   file: name="{{ gitolite_runit }}" state=directory
