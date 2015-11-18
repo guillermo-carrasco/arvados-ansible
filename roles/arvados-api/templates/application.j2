@@ -24,6 +24,8 @@ production:
   websocket_address: {{ sso_address }}
   #git_repositories_dir: ~
   #git_internal_dir: ~
+  git_repo_ssh_base: "git@git.{{ uuid_prefix }}.testing.arvados:"
+  git_repo_http_base: https://git.{{ uuid_prefix }}.testing.arvados/
 
 development:
   # Separate settings for development configuration.
