@@ -1,5 +1,7 @@
 Ansible playbook to deploy [Arvados][arvados] components.
 
+**Still under heavy development, it is _not_ working yet** :)
+
 # Playbook
 The `arvados.yaml` file contains the definition of the playbook. It tells ansible what and where to
 install to deploy an Arvados cluster.
