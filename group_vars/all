@@ -1,12 +1,13 @@
 user: vagrant
 password: vagrant
 
-# Arvados IDs and Passwwords, modify them to match your desired installation. These ate only for testing
+# Arvados IDs and Passwwords, modify them to match your target installation. These are only for testing
 # purposes and are by no means secure for a production cluster
 uuid_prefix: abcde
 secret_token: yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
 blob_signing_key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-arvados_api_host: abcde.testing.arvados
+arvados_public_domain: testing.arvados
+arvados_api_host: "abcde.{{ arvados_public_domain }}"
 arvados_api_token: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
 
 db_password: abcdefghijklmnopqrstuvwxyz012345689
