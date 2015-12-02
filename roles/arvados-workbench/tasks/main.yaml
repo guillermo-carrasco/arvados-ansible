@@ -32,6 +32,37 @@
   sudo: yes
   file: path="{{ arvados_workbench_config_dir }}" state=directory mode=700
 
-- name: Copy example configuration files
+- name: Edit application.yml configuration file
   sudo: yes
-  command: cp /var/www/arvados-workbench/current/config/application.yml.example /etc/arvados/workbench/application.yml
+  template: src=application.j2 dest=/etc/arvados/workbench/application.yml
+
+- name: Configure Piwik
+  sudo: yes
+  command: cp /var/www/arvados-workbench/current/config/piwik.yml.example /var/www/arvados-workbench/current/config/piwik.yml
+
+- name: Configure nginx to use python27 Software Collection
+  sudo: yes
+  shell: >
+    usermod --shell /bin/bash nginx &&
+    sudo -u nginx sh -c 'echo "[[ -z \$PS1 && -e /opt/rh/python27/enable ]] && source /opt/rh/python27/enable" >>~/.bash_profile'
+
+- name: Edit nginx.conf configuration file
+  sudo: yes
+  template: src=nginx.j2 dest=/etc/nginx/nginx.conf
+
+- name: Restart nginx
+  sudo: yes
+  service: name=nginx state=restarted
+
+- name: Prepare the workbench deployment
+  sudo: yes
+  command: /bin/bash /usr/local/bin/arvados-workbench-upgrade.sh
+
+- name: Copy trusted_client.rb script to /var/www/arvados-api/current
+  sudo: yes
+  copy: src=trusted_client.rb dest=/var/www/arvados-api/current/trusted_client.rb
+
+- name: Execute trusted_client.rb script
+  command: bundle exec rake trusted_client.rb
+  args:
+    chdir: /var/www/arvados-api/current

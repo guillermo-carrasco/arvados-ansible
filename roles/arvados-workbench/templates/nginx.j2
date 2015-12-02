@@ -70,25 +70,51 @@ http {
         }
     }
 
-    upstream arvados-git-httpd {
-      server                  127.0.0.1:9001;
+    server {
+      listen 127.0.0.1:9000;
+      server_name localhost-workbench;
+
+      root /var/www/arvados-workbench/current/public;
+      index  index.html index.htm index.php;
+
+      passenger_enabled on;
+      # If you're using RVM, uncomment the line below.
+      #passenger_ruby /usr/local/rvm/wrappers/default/ruby;
+
+      # `client_max_body_size` should match the corresponding setting in
+      # the API server's Nginx configuration.
+      client_max_body_size 128m;
     }
 
+    upstream workbench {
+      server     127.0.0.1:9000  fail_timeout=10s;
+    }
+
+    proxy_http_version 1.1;
+
     server {
-      listen                  {{ ansible_eth1['ipv4']['address'] }}:443 ssl;
-      server_name             git.{{ uuid_prefix }}.testing.arvados;
-      proxy_connect_timeout   90s;
-      proxy_read_timeout      300s;
+      listen       {{ ansible_eth1['ipv4']['address'] }}:443 ssl;
+      server_name  workbench.{{ uuid_prefix }}.{{ arvados_public_domain }};
 
       ssl on;
-      ssl_certificate         {{ SSL_CERT_PATH }}/server.crt;
-      ssl_certificate_key     {{ SSL_CERT_PATH }}/server.key;
+      ssl_certificate     {{ SSL_CERT_PATH }}/server.crt;
+      ssl_certificate_key {{ SSL_CERT_PATH }}/server.key;
 
-      # The server needs to accept potentially large refpacks from push clients.
-      client_max_body_size 50m;
+      index  index.html index.htm index.php;
+      # `client_max_body_size` should match the corresponding setting in
+      # the API server's Nginx configuration.
+      client_max_body_size 128m;
 
-      location  / {
-        proxy_pass            http://arvados-git-httpd;
+      location / {
+        proxy_pass            http://workbench;
+        proxy_redirect        off;
+        proxy_connect_timeout 90s;
+        proxy_read_timeout    300s;
+
+        proxy_set_header      X-Forwarded-Proto https;
+        proxy_set_header      Host $http_host;
+        proxy_set_header      X-Real-IP $remote_addr;
+        proxy_set_header      X-Forwarded-For $proxy_add_x_forwarded_for;
       }
     }
 }
