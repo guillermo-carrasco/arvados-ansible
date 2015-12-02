@@ -22,3 +22,4 @@
       - passenger
       - arvados-api
       - arvados-git
+      - arvados-workbench

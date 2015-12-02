@@ -27,3 +27,11 @@
       - git
       - python27-python-arvados-python-client
       - arvados-workbench
+
+- name: Set up configuration files
+  sudo: yes
+  file: path="{{ arvados_workbench_config_dir }}" state=directory mode=700
+
+- name: Copy example configuration files
+  sudo: yes
+  command: cp /var/www/arvados-workbench/current/config/application.yml.example /etc/arvados/workbench/application.yml
