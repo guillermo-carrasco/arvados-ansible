@@ -1,0 +1,29 @@
+---
+# tasks file for arvados-workbench
+
+- name: Enable EPEL repositories
+  sudo: yes
+  yum: name=epel-release state=latest
+
+# https://community.hpcloud.com/article/centos-63-instance-giving-cannot-retrieve-metalink-repository-epel-error
+- name: Update EPEL repo to use HTTP rather than HTTPS
+  sudo: yes
+  command: sed -i "s/mirrorlist=https/mirrorlist=http/" /etc/yum.repos.d/epel.repo
+
+- name: Install centos-release-SCL to install Python27
+  sudo: yes
+  yum: name=centos-release-SCL state=latest
+
+- name: Install dependencies
+  sudo: yes
+  yum: name={{ item }} state=latest update_cache=yes
+  with_items:
+      - bison
+      - make
+      - automake
+      - gcc
+      - gcc-c++
+      - graphviz
+      - git
+      - python27-python-arvados-python-client
+      - arvados-workbench
