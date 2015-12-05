@@ -1,0 +1,1 @@
+*/5 * * * * git cd /var/www/arvados-api/current && /usr/local/rvm/bin/rvm-exec default bundle exec script/arvados-git-sync.rb production

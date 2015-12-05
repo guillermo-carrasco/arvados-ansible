@@ -1,0 +1,4 @@
+#!/bin/sh
+mkdir -p main
+chown git:git main
+exec chpst -u git:git svlogd -tt main

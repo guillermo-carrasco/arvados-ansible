@@ -1,0 +1,68 @@
+---
+# tasks file for arvados-workbench
+
+- name: Enable EPEL repositories
+  sudo: yes
+  yum: name=epel-release state=latest
+
+# https://community.hpcloud.com/article/centos-63-instance-giving-cannot-retrieve-metalink-repository-epel-error
+- name: Update EPEL repo to use HTTP rather than HTTPS
+  sudo: yes
+  command: sed -i "s/mirrorlist=https/mirrorlist=http/" /etc/yum.repos.d/epel.repo
+
+- name: Install centos-release-SCL to install Python27
+  sudo: yes
+  yum: name=centos-release-SCL state=latest
+
+- name: Install dependencies
+  sudo: yes
+  yum: name={{ item }} state=latest update_cache=yes
+  with_items:
+      - bison
+      - make
+      - automake
+      - gcc
+      - gcc-c++
+      - graphviz
+      - git
+      - python27-python-arvados-python-client
+      - arvados-workbench
+
+- name: Set up configuration files
+  sudo: yes
+  file: path="{{ arvados_workbench_config_dir }}" state=directory mode=700
+
+- name: Edit application.yml configuration file
+  sudo: yes
+  template: src=application.j2 dest=/etc/arvados/workbench/application.yml
+
+- name: Configure Piwik
+  sudo: yes
+  command: cp /var/www/arvados-workbench/current/config/piwik.yml.example /var/www/arvados-workbench/current/config/piwik.yml
+
+- name: Configure nginx to use python27 Software Collection
+  sudo: yes
+  shell: >
+    usermod --shell /bin/bash nginx &&
+    sudo -u nginx sh -c 'echo "[[ -z \$PS1 && -e /opt/rh/python27/enable ]] && source /opt/rh/python27/enable" >>~/.bash_profile'
+
+- name: Edit nginx.conf configuration file
+  sudo: yes
+  template: src=nginx.j2 dest=/etc/nginx/nginx.conf
+
+- name: Restart nginx
+  sudo: yes
+  service: name=nginx state=restarted
+
+- name: Prepare the workbench deployment
+  sudo: yes
+  command: /bin/bash /usr/local/bin/arvados-workbench-upgrade.sh
+
+- name: Copy trusted_client.rb script to /var/www/arvados-api/current
+  sudo: yes
+  copy: src=trusted_client.rb dest=/var/www/arvados-api/current/trusted_client.rb
+
+- name: Execute trusted_client.rb script
+  command: bundle exec rake trusted_client.rb
+  args:
+    chdir: /var/www/arvados-api/current

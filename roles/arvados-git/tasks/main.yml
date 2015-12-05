@@ -4,32 +4,80 @@
   shell: curl -s https://packagecloud.io/install/repositories/imeyer/runit/script.rpm.sh | sudo bash
 
 - name: Install Arvados GIT server and dependencies
+  sudo: yes
   yum: name={{ item }} state=latest update_cache=yes
   with_items:
     - git
-#    - perl-Data-Dumper XXX: not found in yum, should be installed via cpanm?
+    - perl-Data-Dumper-Names
     - openssh-server
     - gitolite3
     - arvados-git-httpd
     - runit
 
-- name: "Create arvados-api user and internal git repos"
-  file: path="{{ item }}" state=directory mode=0700
-  with_items:
-    - "/var/lib/arvados/internal.git"
-    - "{{ gitolite_user_home }}/repositories"
+- name: Create git group
+  sudo: yes
+  group: name="{{ git_user_name }}" state=present
 
-- name: Add git user and generate SSH key
-  user: name={{ gitolite_user_name }} shell=/bin/bash groups={{ gitolite_user_name }} home="{{ gitolite_user_home }}" generate_ssh_key=yes ssh_key_bits=2048
+- name: Add git user and generate SSH keys
+  sudo: yes
+  user: name="{{ git_user_name }}" shell=/bin/bash group="{{ git_user_name }}" home="{{ git_user_home }}" generate_ssh_key=yes
+
+- name: Save public key into local variable for later use
+  become: yes
+  become_user: "{{ git_user_name }}"
+  become_method: sudo
+  command: cat {{ git_user_home }}/.ssh/id_rsa.pub
+  register: GIT_SSH_KEY
 
 - name: Create arvados git dir
-  file: name="{{ gitolite_user_home }}" state=directory owner="{{ gitolite_user_name }}" group="{{ gitolite_user_name }}"
+  sudo: yes
+  file: name="{{ git_user_home }}" state=directory owner="{{ git_user_name }}" group="{{ git_user_name }}"
 
-- name: Create arvados git (bin) dir
-  file: name="{{ gitolite_user_home }}/bin" state=directory owner="{{ gitolite_user_name }}" group="{{ gitolite_user_name }}"
+- name: Allow passwordless ssh connection to the git user
+  become: yes
+  become_user: "{{ git_user_name }}"
+  become_method: sudo
+  shell: >
+    cp .ssh/id_rsa.pub .ssh/authorized_keys &&
+    ssh -o stricthostkeychecking=no localhost cat .ssh/id_rsa.pub
+  args:
+    chdir: "{{ git_user_home }}"
 
-- name: Create gitolite runit service dir
-  file: name="{{ gitolite_runit }}" state=directory
+- name: Setup gitolite
+  become: yes
+  become_user: "{{ git_user_name }}"
+  become_method: sudo
+  command: gitolite setup -pk .ssh/id_rsa.pub
+  args:
+      chdir: "{{ git_user_home }}"
+
+- name: Copy gitolite configuration
+  become: yes
+  become_user: "{{ git_user_name }}"
+  become_method: sudo
+  copy: src=gitolite.rc dest="{{ git_user_home}}/.gitolite.rc"
+
+- name: Configure git synchronization
+  sudo: yes
+  template: src=arvados-clients.j2 dest=/var/www/arvados-api/current/config/arvados-clients.yml
+
+- name: Enable the synchronization script
+  sudo: yes
+  copy: src=arvados-git-sync dest=/etc/cron.d/arvados-git-sync
+
+- name: Create directories for arvados-git-httpd
+  sudo: yes
+  file: name=/etc/sv/arvados-git-httpd/log state=directory
+
+
+- name: Copy log/run file for gitolite
+  sudo: yes
+  copy: src="log_run" dest="{{ gitolite_runit }}/log/run" mode=700
 
 - name: Setting up runit config for gitolite
+  sudo: yes
   template: src="gitolite.runit.j2" dest="{{ gitolite_runit }}/run" mode=700
+
+- name: Restart nginx
+  sudo: yes
+  service: name=nginx state=restarted
