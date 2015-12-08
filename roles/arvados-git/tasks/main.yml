@@ -44,9 +44,7 @@
     chdir: "{{ git_user_home }}"
 
 - name: Setup gitolite
-  become: yes
-  become_user: "{{ git_user_name }}"
-  become_method: sudo
+  sudo: yes
   command: gitolite setup -pk .ssh/id_rsa.pub
   args:
       chdir: "{{ git_user_home }}"

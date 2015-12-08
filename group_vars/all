@@ -1,6 +1,8 @@
 user: vagrant
 password: vagrant
 
+rvm1_gpg_key_server: 'hkp://pgp.mit.edu'
+
 # Arvados IDs and Passwwords, modify them to match your target installation. These are only for testing
 # purposes and are by no means secure for a production cluster
 uuid_prefix: abcde
