@@ -5,6 +5,7 @@
   sudo: yes
   with_items:
       - {name: 'postgresql'}
+      - {name: 'postgresql-contrib'}
       - {name: 'postgresql-devel'}
       - {name: 'postgresql-server'}
   when: ansible_distribution == "CentOS"

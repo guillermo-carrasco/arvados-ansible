@@ -78,6 +78,13 @@ Vagrant.configure("2") do |global_config|
                 ansible.playbook = "arvados.yaml"
                 ansible.inventory_path = "cluster-vm"
             end
+
+            # Retry w/ i.e "vagrant provision --provision-with resume workbench"
+            config.vm.provision "resume", type: "ansible" do |resume|
+                resume.playbook = "arvados.yaml"
+                resume.inventory_path = "cluster-vm"
+                resume.limit = "@#{ENV['HOME']}/arvados.yaml.retry"
+            end
         end
     end
 end
